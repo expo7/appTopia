@@ -1,0 +1,350 @@
+{% extends "base.html" %} {% block content %}
+<div class="container">
+  <div class="border p-2 m-2 bg-light text-center">
+  <p>Calculate distance, angle and initial velocity given two point and the force of friction. The force of friction is parallel to the displacement line.  Angle is measured in degrees courter clockwise from the X-axis.</p>
+  </div>
+  <div class="row pt-3">
+    <div class="col-2 bg-secondary p-4 border">
+      <div class="input-group">
+        <div class="col">
+
+      
+          <div class="row">
+            <label for="x1">x1:</label>
+            <input type="text" id="x1" />
+          </div>
+          <div class="row">
+            <label for="y1">y1:</label>
+            <input type="text" id="y1" />
+          </div>
+          <div class="row">
+            <label for="x2">x2:</label>
+            <input type="text" id="x2" />
+          </div>
+          <div class="row">
+            <label for="y2">y2:</label>
+            <input type="text" id="y2" />
+          </div>
+          <div class="row">
+            <label for="acc">Friction:</label>
+            <input type="text" id="acc" />
+          </div>
+
+
+ 
+          <button class="btn btn-success  m-2 text-center" onclick="myJsFunction()">Click</button>
+          <!-- <button type="button" class="btn btn-primary">Primary</button> -->
+        </div>
+      
+      </div>
+    </div>
+    <div class="col p-4">
+      <div id="tester" style="width: 650px; height: 350px"></div>
+    </div>
+    <div class="col">
+      <table class="table table-bordered table-Secondary">
+        <!-- <thead>
+           <tr>
+            <th id="p1" ></th>
+
+          </tr> -->
+        </thead> 
+        <tbody>
+          <tr>
+            <th scope="row">Points</th>
+            
+            <td id="p1"></td>
+
+          </tr>
+          <tr>
+            <th scope="row">Distance</th>
+            
+            <td id="distance"></td>
+
+          </tr>
+          <tr>
+            <th scope="row">Initial Velocity</th>
+            <td id="vi"></td>
+
+          </tr>
+          <tr>
+            <th scope="row">Final Velocity</th>
+            <td id="vff"></td>
+          </tr>
+
+          <tr>
+            <th scope="row">Angle</th>
+            <td id="angle"></td>
+          </tr>
+          <tr>
+            <th scope="row">Friction</th>
+            <td id="accer"></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row">
+        <b id="point1"></b>
+      </div>
+
+      <div class="row">
+        <b id="distance"></b>
+      </div>
+
+      <div class="row">
+        <b id="vi"></b>
+      </div>
+      <div class="row">
+        <b id="vff"></b>
+      </div>
+      <div class="row">
+        <b id="angle"></b>
+      </div>
+      <div class="row">
+        <b id="time"></b>
+      </div>
+    </div>
+
+    <script>
+      function myTime(v, u, a) {
+        t = (v - u) / a;
+        return t;
+      }
+      function getAngle(x1, y1, x2, y2) {
+        console.log("getAngle");
+        var xdist = x2 - x1;
+        var ydist = y2 - y1;
+        var hyptonuse = distance(x1, y1, x2, y2);
+        if ((xdist > 0) & (ydist > 0)) {
+          angle = radians_to_degrees(Math.asin(ydist / hyptonuse));
+          return angle;
+        }
+        if ((xdist < 0) & (ydist > 0)) {
+          angle = 180 - radians_to_degrees(Math.asin(ydist / hyptonuse));
+          return angle;
+        }
+
+        if ((xdist > 0) & (ydist < 0)) {
+          angle = 360 + radians_to_degrees(Math.asin(ydist / hyptonuse));
+          return angle;
+        }
+
+        if ((xdist < 0) & (ydist < 0)) {
+          angle = 180 - radians_to_degrees(Math.asin(ydist / hyptonuse));
+          return angle;
+        }
+        return 0;
+      }
+      function mid(x1,x2){
+        var x=parseInt(x1, 10)
+        var y=parseInt(x2, 10)
+        var mid = (x + y)/2;
+        console.log(mid,x,y);
+      
+        return mid
+      } 
+      function distance(x1, y1, x2, y2) {
+        let ydiff = y2 - y1;
+        let xdiff = x2 - x1;
+        let dist = Math.pow(Math.pow(ydiff, 2) + Math.pow(xdiff, 2), 0.5);
+        return dist;
+      }
+
+      function vi(x1, y1, x2, y2, acc) {
+        let d = distance(x1, y1, x2, y2);
+        let vi = Math.pow(2 * d * acc, 0.5);
+        return vi;
+      }
+
+      function radians_to_degrees(radians) {
+        var pi = Math.PI;
+        return radians * (180 / pi);
+      }
+      function myJsFunction() {
+        var x1 = parseInt(document.getElementById("x1").value,10);
+        var y1 = parseInt(document.getElementById("y1").value,10);
+        var x2 = parseInt(document.getElementById("x2").value,10);
+        var y2 = parseInt(document.getElementById("y2").value,10);
+        if (x2>x1){
+          console.log('x2>x1',x2,x1)
+          xd='arrow-right'
+        }
+        if (x2<x1){
+          console.log('x2<x1',x2,x1)
+          xd='arrow-left'
+
+        }
+
+
+        if (y2>y1){
+          console.log('y2>y1',y2,y1)
+          yd='arrow-up'
+        }
+        if (y2<y1){
+          console.log('y2<y1')
+          yd='arrow-down'
+
+        }
+
+
+        // var vf = document.getElementById("vf").value;
+        var vf=0;
+        var acc = document.getElementById("acc").value;
+        var dist = distance(x1, y1, x2, y2);
+        var v = vi(x1, y1, x2, y2, acc);
+        var vvv = document.getElementById("vi");
+        var xxx = document.getElementById("distance");
+        var p1 = document.getElementById("p1");
+        var angle = document.getElementById("angle");
+        var vff = document.getElementById("vff");
+        var time = document.getElementById("time");
+        var accer = document.getElementById("accer");
+        var a = getAngle(x1, y1, x2, y2);
+        var t = myTime(v, vf, acc);
+        var mx 
+        var my
+        mx=mid(x1,x2)
+        console.log(mx);
+        my=mid(y1,y2)
+        accer.innerHTML=acc;
+        vff.innerHTML =  vf;
+        angle.innerHTML = a.toFixed(2);
+        vvv.innerHTML = v.toFixed(2);
+
+        p1.innerHTML =
+          "(" + x1 + "," + y1 + ") to" + " (" + x2 + "," + y2 + ") ";
+
+        // xxx.innerHTML = "Distance: ";
+        xxx.innerHTML = dist.toFixed(2);
+        TESTER = document.getElementById("tester");
+
+ var data=       [
+{
+  x:[x1,x2],
+  y:[y1,y1],
+
+  name:'Y',
+  mode:'lines',
+  line:{
+  dash:"dot",
+  color: "orange",
+}},
+
+{
+  x:[x2,x2],
+  y:[y1,y2],
+  name:'X',
+  mode:'lines',
+  line:{
+  dash:"dot",
+  color: "green",
+}},
+
+
+
+ 
+
+
+
+{name:'X-Direction',
+x:[mx],
+y:[y1],
+mode:"markers",
+marker : {
+    size: '10',
+  color: 'grey',
+  symbol: xd },
+
+
+},
+
+
+{name:'Y-Direction',
+x:[x2],
+y:[my],
+mode:"markers",
+marker : {
+    size: '10',
+  color: 'green',
+  symbol: yd },
+
+
+},
+
+{
+
+name:'Displacement',
+mode:'lines',
+line:{
+  color: 'blue',
+},
+x: [x1, x2],
+y: [y1, y2],
+},
+
+{
+  x:[x1],
+  y:[y1],
+  name:'Start',
+  mode:'markers',
+  marker:{
+  size:"10",
+  color: "green",
+}},
+
+{
+  x:[x2],
+  y:[y2],
+  name:'End',
+  mode:'markers',
+  marker:{
+  size:"10",
+  color: "grey",
+}},
+]
+
+        var layout = {
+  title: {
+    text:'2D Displacement',
+    font: {
+      family: 'Courier New, monospace',
+      size: 24
+    },
+    xref: 'paper',
+    x: 0.05,
+  },
+  xaxis: {
+    title: {
+      text: 'x',
+      font: {
+        family: 'Courier New, monospace',
+        size: 18,
+        color: '#7f7f7f'
+      }
+    },
+  },
+  yaxis: {
+  
+  
+    title: {
+      text: 'y',
+      font: {
+        family: 'Courier New, monospace',
+        size: 18,
+        color: '#7f7f7f'
+      }
+    }
+  }
+};
+
+
+        Plotly.newPlot(TESTER,data,layout);
+      
+      }
+    </script>
+  </div>
+</div>
+ 
+
+    {% endblock %}
+  </div>
+</div>
